@@ -1,0 +1,56 @@
+classDiagram
+direction TB
+    class App {
+    }
+
+    class Game {
+	    - String name
+	    - int score
+	    - int turnId
+    }
+
+    class Map {
+    }
+
+    class Inventory {
+	    - int bearCount
+	    - int foxCount
+	    - int fishCount
+    }
+
+    class Tile {
+    }
+
+    class Animal {
+    }
+
+    class Plain {
+    }
+
+    class Forest {
+    }
+
+    class Lac {
+    }
+
+    class Bear {
+    }
+
+    class Fox {
+    }
+
+    class Fish {
+    }
+
+    App "0 - n" o-- Game : games
+    Game "1" <-- Map : map
+    Game "1" <-- Inventory : inventory
+    Map "100" o-- Tile : tiles
+    Tile "1" <-- Animal : animal
+    Tile <|-- Plain
+    Tile <|-- Forest
+    Tile <|-- Lac
+    Animal <|-- Bear
+    Animal <|-- Fox
+    Animal <|-- Fish
+
