@@ -1,0 +1,21 @@
+:host {
+  --tile-width: 125px;
+  --tile-height: calc(0.5 * var(--tile-width));
+  --tile-thickness: calc(0.08 * var(--tile-width));
+  --tile-full-height: calc(var(--tile-height) + var(--tile-thickness));
+  --tile-gap: calc(0.02 * var(--tile-width));
+  display: block;
+  position: relative;
+  --map-width: calc(
+    var(--map-size) * var(--tile-width) +
+    2 * (var(--map-size) - 1) * var(--tile-gap)
+  );
+  width: var(--map-width);
+  height: calc(
+    var(--map-size) * var(--tile-height) +
+    2 * (var(--map-size) - 1) * var(--tile-gap) +
+    var(--tile-thickness)
+
+  );
+  margin: 100px auto;
+}

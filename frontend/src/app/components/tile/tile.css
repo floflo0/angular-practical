@@ -1,0 +1,48 @@
+img {
+  position: absolute;
+  width: var(--tile-width);
+  height: var(--tile-full-height);
+  top: calc(
+    (0.25 * var(--tile-width) + var(--tile-gap)) *
+    (var(--x) + var(--y))
+  );
+  left: calc(
+    (0.5 * var(--tile-width) + var(--tile-gap)) *
+    (var(--x) - var(--y)) -
+    0.5 * var(--tile-width) +
+    0.5 * var(--map-width)
+  );
+  animation: appear 300ms ease-in-out forwards;
+  animation-fill-mode: backwards;
+  animation-delay: calc(50ms * (var(--x) + var(--y)));
+  transition: transform 50ms ease-in-out;
+  user-select: none;
+  clip-path: polygon(
+    50% 0,
+    100% 43.10%,
+    100% 55.17%,
+    50% 100%,
+    0 55.17%,
+    0 43.10%
+  );
+}
+
+img:hover {
+  cursor: pointer;
+  transform: translateY(-5%);
+}
+
+img:active {
+  transform: translateY(5%);
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: scale(0.2) translateY(500%);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
