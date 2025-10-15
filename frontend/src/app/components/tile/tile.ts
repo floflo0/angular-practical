@@ -4,8 +4,8 @@ import { TileModel } from '../../models/tile-model';
 
 const SVG_PATHS = {
   [TileType.PLAIN]: 'plain.svg',
-  [TileType.FOREST]: 'tree.svg',
-  [TileType.LAC]: 'water.svg',
+  [TileType.TREE]: 'tree.svg',
+  [TileType.WATER]: 'water.svg',
 }
 
 @Component({
