@@ -1,6 +1,6 @@
 import { TileModel } from './tile-model';
 
-const MAP_SIZE: number = 10;
+const MAP_SIZE: number = 8;
 
 export class MapModel {
   private _tiles: TileModel[][];
