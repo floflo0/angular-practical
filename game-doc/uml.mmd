@@ -1,16 +1,5 @@
 classDiagram
 direction TB
-    class App {
-    }
-
-    class Game {
-	    - String name
-	    - int score
-	    - int turnId
-    }
-
-    class Map {
-    }
 
     class Inventory {
 	    - int bearCount
@@ -18,39 +7,59 @@ direction TB
 	    - int fishCount
     }
 
+    class MapService {
+        + getMapNames() String[]
+        + generateNewMap() Map
+        + saveMap(Map map)
+    }
+
+    class RestService {
+        + getMapNames() String[]
+        + getMap(String name) Map
+        + saveMap(Map map)
+    }
+
+    class GameService {
+	    - String playerName
+        - int score
+	    - int turnId
+
+        + createGame(String playerName, Map map)
+        + selectAnimal(Animal animal)
+        + placeAnimal(Tile tile)
+        + terminateGame()
+        + setPlayerName()
+    }
+
+    class Map {
+        - String name
+    }
+
     class Tile {
+        - int x
+        - int y
+    }
+
+    class TileType {
+        <<enumeration>>
+        PLAIN
+        TREE
+        WATER
     }
 
     class Animal {
+        <<enumeration>>
+        FOX
+        BEAR 
+        FISH
     }
 
-    class Plain {
-    }
-
-    class Forest {
-    }
-
-    class Lac {
-    }
-
-    class Bear {
-    }
-
-    class Fox {
-    }
-
-    class Fish {
-    }
-
-    App "0 - n" o-- Game : games
-    Game "1" <-- Map : map
-    Game "1" <-- Inventory : inventory
-    Map "100" o-- Tile : tiles
-    Tile "1" <-- Animal : animal
-    Tile <|-- Plain
-    Tile <|-- Forest
-    Tile <|-- Lac
-    Animal <|-- Bear
-    Animal <|-- Fox
-    Animal <|-- Fish
+    GameService "1" o-- "1" MapService : mapService
+    GameService "0..1" --> "0..1" Animal : currentAnimal
+    MapService "1" o-- "1" RestService : restService
+    MapService "1" o-- "1" Map : currentMap
+    GameService "1" *-- "1" Inventory : inventory
+    Map "64" *-- "1" Tile : tiles
+    TileType "0..n" <-- "1" Tile : tileType
+    Animal "0..n" <-- "0..1" Tile : animal
 
