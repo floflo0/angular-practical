@@ -1,0 +1,18 @@
+sequenceDiagram
+    participant F as Frontend
+    participant C as MapController
+    participant S as MapService
+    participant R as MapRepository
+
+    F->>C: GET /maps/{name}
+    C->>S: getMapByName(name)
+    S->>R: findByName(name)
+    alt Map exists
+        R-->>S: Map
+        S-->>C: MapDto
+        C-->>F: HTTP 200 OK, MapDto
+    else Map not found
+        R-->>S: null / Optional.empty
+        S-->>C: null / Optional.empty
+        C-->>F: HTTP 404 Not Found
+    end

@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant F as Frontend
+    participant C as MapController
+    participant S as MapService
+    participant R as MapRepository
+
+    F->>C: POST /maps (MapDto)
+    alt Invalid MapDto
+        C-->>F: HTTP 400 Bad Request
+    else Valid MapDto
+        C->>S: saveMap(MapDto)
+        S->>R: save(Map)
+        R-->>S: Map
+        S-->>C: MapDto
+        C-->>F: HTTP 201 Created, MapDto
+    end

@@ -1,0 +1,12 @@
+sequenceDiagram
+    participant F as Frontend
+    participant C as MapController
+    participant S as MapService
+    participant R as MapRepository
+
+    F->>C: GET /maps/
+    C->>S: getMapNames()
+    S->>R: findAll()
+    R-->>S: List<Map>
+    S-->>C: List<String>
+    C-->>F: HTTP 200 OK, List<String>
