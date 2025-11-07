@@ -1,4 +1,4 @@
-@for (line of map.tiles; let y = $index; track y) {
+@for (line of map().tiles; let y = $index; track y) {
   @for (tile of line; let x = $index; track x) {
     <app-tile [tile]="tile" />
   }

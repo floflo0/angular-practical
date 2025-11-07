@@ -1,6 +1,7 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, computed, HostBinding, inject, Signal } from '@angular/core';
 import { Tile } from '../tile/tile';
 import { MapModel } from '../../models/map-model';
+import { MapService } from '../../service/map-service';
 
 @Component({
   selector: 'app-map',
@@ -9,12 +10,15 @@ import { MapModel } from '../../models/map-model';
   styleUrl: './map.css'
 })
 export class Map {
-  protected readonly map: MapModel;
+  private readonly mapService: MapService = inject(MapService);
 
-  public constructor() {
-    this.map = new MapModel();
-  }
+  protected readonly map: Signal<MapModel> = this.mapService.currentMap;
+  private readonly _mapSize: Signal<number> = computed(
+    () => this.map().tiles.length,
+  );
 
   @HostBinding('style.--map-size')
-  protected get mapSize() { return this.map.tiles.length; }
+  protected get mapSize(): number {
+    return this._mapSize();
+  }
 }
