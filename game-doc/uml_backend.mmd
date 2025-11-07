@@ -1,0 +1,44 @@
+classDiagram
+direction TB
+
+    class MapController {
+        + getMapNames() List~String~
+        + getMapByName(String name) MapDto
+        + saveMap(MapDto map) MapDto
+    }
+
+    class MapService {
+        + getMapNames() List~String~
+        + getMapByName(String name) MapDto
+        + saveMap(MapDto map) MapDto
+    }
+
+    class MapRepository {
+        + findAll() List~Map~
+        + findByName(String name) Optional~Map~
+        + save(Map map) Map
+    }
+
+    class Map {
+        - int id
+        - String name
+    }
+
+    class MapDto {
+        - int id
+        - String name
+    }
+
+class TileType {
+    <<enumeration>>
+    PLAIN = 0
+    TREE = 1
+    WATER = 2
+}
+
+
+    %% Relations
+    MapController "1" --> "1" MapService : mapService
+    MapService "1" --> "1" MapRepository : mapRepository
+    Map "1" *-- "64" TileType : tiles
+    MapDto "1" *-- "64" TileType : tiles
