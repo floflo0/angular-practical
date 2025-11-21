@@ -3,7 +3,6 @@ import { MapModel } from '../models/map-model';
 import { MapService } from './map-service';
 import { Animal } from '../models/animal';
 import { TileModel } from '../models/tile-model';
-// import { Inventory } from '../models/inventory';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +22,12 @@ export class GameService {
   private readonly _selectedAnimal = signal<Animal | null>(null);
   public readonly selectedAnimal: Signal<Animal | null> = this._selectedAnimal.asReadonly();
 
-  // private readonly inventory = new Inventory();
+  private readonly _inventory  = signal<Record<Animal, number>>({
+    [Animal.BEAR]: 0,
+    [Animal.FISH]: 0,
+    [Animal.FOX]: 0,
+  });
+  public readonly invetory = this._inventory.asReadonly();
 
   public createGame(playerName: string, map: MapModel): void {
     this._playerName.set(playerName);
@@ -31,6 +35,8 @@ export class GameService {
   }
 
   public selectAnial(animal: Animal | null): void {
+    if (animal !== null && this._inventory()[animal] == 0) return;
+
     this._selectedAnimal.set(animal);
   }
 

@@ -1,0 +1,5 @@
+:host {
+  position: absolute;
+  right: calc(var(--spacing) * 2);
+  bottom: calc(var(--spacing) * 2);
+}

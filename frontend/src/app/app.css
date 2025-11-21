@@ -1,12 +1,3 @@
-@font-face {
-  font-family: Bodo;
-  src: url("/BodoAmat.ttf");
-}
-
-* {
-  font-family: Bodo;
-}
-
 h1 {
   position: absolute;
   top: 2%;

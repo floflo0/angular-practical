@@ -1,0 +1,12 @@
+<button class="animal-button" (click)="selectBear()" [disabled]="!bearCount()">
+  <img src="bear.svg" alt="Icon d'ours" />
+  <p class="count">{{ bearCount() }}</p>
+</button>
+<button class="animal-button" (click)="selectFish()" [disabled]="!fishCount()">
+  <img src="fish.svg" alt="Icon de poisson" />
+  <p class="count">{{ fishCount() }}</p>
+</button>
+<button class="animal-button" (click)="selectFox()" [disabled]="!foxCount()">
+  <img src="fox.svg" alt="Icon de renard" />
+  <p class="count">{{ foxCount() }}</p>
+</button>

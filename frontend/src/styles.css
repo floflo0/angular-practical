@@ -1,3 +1,18 @@
+@font-face {
+  font-family: Bodo;
+  src: url("/BodoAmat.ttf");
+}
+
+:root {
+  --gray: #eeeeee;
+  --spacing: 15px;
+}
+
+* {
+  font-family: Bodo;
+}
+
+
 body {
   margin: 0;
 }
