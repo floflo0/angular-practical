@@ -43,6 +43,9 @@ class MapServiceTest {
         return Collections.nCopies(64, 1);
     }
 
+    // ---------------------------------------------------------
+    // 1. getMapNames_success
+    // ---------------------------------------------------------
     @Test
     void getMapNames_success() {
         List<MapEntity> list = List.of(
@@ -60,6 +63,9 @@ class MapServiceTest {
         assertEquals(expected, retrieved);
     }
 
+    // ---------------------------------------------------------
+    // 2. getMapByName_found
+    // ---------------------------------------------------------
     @Test
     void getMapByName_found() {
         MapEntity entity = new MapEntity("map1", validTiles());
@@ -75,25 +81,28 @@ class MapServiceTest {
         assertEquals(expected.getTiles(), retrieved.getTiles());
     }
 
+    // ---------------------------------------------------------
+    // 3. getMapByName_notFound
+    // ---------------------------------------------------------
     @Test
     void getMapByName_notFound() {
         when(repo.findByName("unknown")).thenReturn(Optional.empty());
 
-        try {
-            service.getMapByName("unknown");
-        } catch (NotFoundException ex) {
-            System.out.println("RETRIEVED: NotFoundException with message '" + ex.getMessage() + "'");
-            System.out.println("EXPECTED : NotFoundException");
-        }
+        NotFoundException ex = assertThrows(NotFoundException.class, () -> service.getMapByName("unknown"));
+
+        System.out.println("RETRIEVED: NotFoundException with message '" + ex.getMessage() + "'");
+        System.out.println("EXPECTED : NotFoundException");
     }
 
+    // ---------------------------------------------------------
+    // 4. saveMap_create_success
+    // ---------------------------------------------------------
     @Test
     void saveMap_create_success() {
         MapDto dto = new MapDto(null, "newMap", validTiles());
         MapEntity saved = new MapEntity("newMap", validTiles());
         saved.setId(10);
 
-        when(repo.existsByName("newMap")).thenReturn(false);
         when(repo.save(any())).thenReturn(saved);
 
         MapDto retrieved = service.saveMap(dto);
@@ -107,6 +116,34 @@ class MapServiceTest {
         assertEquals(expected.getTiles(), retrieved.getTiles());
     }
 
+    // ---------------------------------------------------------
+    // 5. saveMap_create_duplicateName (nouveau comportement : autorisé)
+    // ---------------------------------------------------------
+    @Test
+    void saveMap_create_duplicateName() {
+        MapDto dto = new MapDto(null, "existing", validTiles());
+
+        MapEntity savedEntity = new MapEntity();
+        savedEntity.setId(2);
+        savedEntity.setName("existing");
+        savedEntity.setTiles(validTiles());
+
+        when(repo.save(any(MapEntity.class))).thenReturn(savedEntity);
+
+        MapDto result = service.saveMap(dto);
+
+        verify(repo, times(1)).save(any(MapEntity.class));
+
+        System.out.println("RETRIEVED: " + result);
+        System.out.println("EXPECTED : Creation OK even with duplicate name");
+
+        assertEquals(2, result.getId());
+        assertEquals("existing", result.getName());
+    }
+
+    // ---------------------------------------------------------
+    // 6. saveMap_update_existing
+    // ---------------------------------------------------------
     @Test
     void saveMap_update_existing() {
         MapDto dto = new MapDto(1, "updatedMap", validTiles());
@@ -125,32 +162,22 @@ class MapServiceTest {
         assertEquals(expected.getName(), retrieved.getName());
     }
 
-    @Test
-    void saveMap_create_duplicateName() {
-        MapDto dto = new MapDto(null, "existing", validTiles());
-
-        when(repo.existsByName("existing")).thenReturn(true);
-
-        try {
-            service.saveMap(dto);
-        } catch (BadRequestException ex) {
-            System.out.println("RETRIEVED: BadRequestException with message '" + ex.getMessage() + "'");
-            System.out.println("EXPECTED : BadRequestException");
-        }
-    }
-
+    // ---------------------------------------------------------
+    // 7. saveMap_invalidTiles_wrongSize
+    // ---------------------------------------------------------
     @Test
     void saveMap_invalidTiles_wrongSize() {
         MapDto dto = new MapDto(null, "name", List.of(1, 2));
 
-        try {
-            service.saveMap(dto);
-        } catch (BadRequestException ex) {
-            System.out.println("RETRIEVED: BadRequestException with message '" + ex.getMessage() + "'");
-            System.out.println("EXPECTED : BadRequestException for invalid tile size");
-        }
+        BadRequestException ex = assertThrows(BadRequestException.class, () -> service.saveMap(dto));
+
+        System.out.println("RETRIEVED: BadRequestException with message '" + ex.getMessage() + "'");
+        System.out.println("EXPECTED : BadRequestException for invalid tile size");
     }
 
+    // ---------------------------------------------------------
+    // 8. saveMap_invalidTiles_badValue
+    // ---------------------------------------------------------
     @Test
     void saveMap_invalidTiles_badValue() {
         List<Integer> tiles = new ArrayList<>(validTiles());
@@ -158,23 +185,22 @@ class MapServiceTest {
 
         MapDto dto = new MapDto(null, "name", tiles);
 
-        try {
-            service.saveMap(dto);
-        } catch (BadRequestException ex) {
-            System.out.println("RETRIEVED: BadRequestException with message '" + ex.getMessage() + "'");
-            System.out.println("EXPECTED : BadRequestException for tile value out of range");
-        }
+        BadRequestException ex = assertThrows(BadRequestException.class, () -> service.saveMap(dto));
+
+        System.out.println("RETRIEVED: BadRequestException with message '" + ex.getMessage() + "'");
+        System.out.println("EXPECTED : BadRequestException for tile value out of range");
     }
 
+    // ---------------------------------------------------------
+    // 9. saveMap_emptyName
+    // ---------------------------------------------------------
     @Test
     void saveMap_emptyName() {
         MapDto dto = new MapDto(null, "   ", validTiles());
 
-        try {
-            service.saveMap(dto);
-        } catch (BadRequestException ex) {
-            System.out.println("RETRIEVED: BadRequestException with message '" + ex.getMessage() + "'");
-            System.out.println("EXPECTED : BadRequestException for empty name");
-        }
+        BadRequestException ex = assertThrows(BadRequestException.class, () -> service.saveMap(dto));
+
+        System.out.println("RETRIEVED: BadRequestException with message '" + ex.getMessage() + "'");
+        System.out.println("EXPECTED : BadRequestException for empty name");
     }
 }

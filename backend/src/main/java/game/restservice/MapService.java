@@ -35,11 +35,6 @@ public class MapService {
 
     public MapDto saveMap(MapDto dto) {
         validateDto(dto);
-
-        if (dto.getId() == null && repository.existsByName(dto.getName())) {
-            throw new BadRequestException("A map with the same name already exists");
-        }
-
         MapEntity entity = toEntity(dto);
         MapEntity saved = repository.save(entity);
         return toDto(saved);

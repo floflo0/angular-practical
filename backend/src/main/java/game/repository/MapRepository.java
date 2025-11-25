@@ -10,7 +10,6 @@ import java.util.Optional;
 
 public interface MapRepository extends CrudRepository<MapEntity, Integer> {
     Optional<MapEntity> findByName(String name);
-    boolean existsByName(String name);
     @Query("SELECT m FROM MapEntity m")
     List<MapEntity> findAllAsList();
 }

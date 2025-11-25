@@ -1,20 +1,19 @@
 ### Liste des tests manuels
 # 1. GET all maps
 # 2. POST create map success
-# 3. POST create map duplicate name
-# 4. POST create map invalid tiles
-# 5. POST create map empty name
-# 6. GET map by name found
-# 7. GET map by name not found
+# 3. POST create map invalid tiles
+# 4. POST create map empty name
+# 5. GET map by name found
+# 6. GET map by name not found
 
 ###
 
-GET http://localhost:4444/api/game
+GET http://localhost:4444/api/maps
 Accept: application/json
 
 ###
 
-POST http://localhost:4444/api/game
+POST http://localhost:4444/api/maps
 Content-Type: application/json
 
 {
@@ -29,22 +28,7 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:4444/api/game
-Content-Type: application/json
-
-{
-  "name": "mapDemo",
-  "tiles": [
-    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
-  ]
-}
-
-###
-
-POST http://localhost:4444/api/game
+POST http://localhost:4444/api/maps
 Content-Type: application/json
 
 {
@@ -54,7 +38,7 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:4444/api/game
+POST http://localhost:4444/api/maps
 Content-Type: application/json
 
 {
@@ -69,10 +53,10 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:4444/api/game/by-name?name=mapDemo
+GET http://localhost:4444/api/maps/by-name?name=mapDemo
 Accept: application/json
 
 ###
 
-GET http://localhost:4444/api/game/by-name?name=doesNotExist
+GET http://localhost:4444/api/maps/by-name?name=doesNotExist
 Accept: application/json
