@@ -4,7 +4,7 @@ import { RestService } from './rest-service';
 import { TileModel } from '../models/tile-model';
 import { getRandomTileType } from '../models/tile-type';
 
-const MAP_SIZE: number = 8;
+export const MAP_SIZE: number = 8;
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class MapService {
     this._currentMap.set(map);
   }
 
-  public getMapNames(): string[] {
+  public getMapNames(): Promise<string[]> {
     return this.restService.getMapNames();
   }
 
@@ -35,7 +35,7 @@ export class MapService {
     return new MapModel('', tiles);
   }
 
-  public saveMap(map: MapModel): void {
-    this.restService.saveMap(map);
+  public async saveMap(map: MapModel): Promise<void> {
+    await this.restService.saveMap(map);
   }
 }
