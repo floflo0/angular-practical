@@ -13,24 +13,24 @@ export class InventorySelector {
   private readonly gameService: GameService = inject(GameService);
 
   protected readonly bearCount = computed(
-    () => this.gameService.invetory()[Animal.BEAR],
+    () => this.gameService.inventory()[Animal.BEAR],
   );
   protected readonly fishCount = computed(
-    () => this.gameService.invetory()[Animal.FISH],
+    () => this.gameService.inventory()[Animal.FISH],
   );
   protected readonly foxCount = computed(
-    () => this.gameService.invetory()[Animal.FOX],
+    () => this.gameService.inventory()[Animal.FOX],
   );
 
   protected selectBear() {
-    this.gameService.selectAnial(Animal.BEAR);
+    this.gameService.selectAnimal(Animal.BEAR);
   }
 
   protected selectFish() {
-    this.gameService.selectAnial(Animal.FISH);
+    this.gameService.selectAnimal(Animal.FISH);
   }
 
   protected selectFox() {
-    this.gameService.selectAnial(Animal.FOX);
+    this.gameService.selectAnimal(Animal.FOX);
   }
 }

@@ -1,6 +1,7 @@
 <img
   [src]="svgPath()"
-  alt="Plain tile"
+  [alt]="altMessage()"
+  (click)="handleClick()"
   draggable="false"
   [style.--x]="tile().x"
   [style.--y]="tile().y"
