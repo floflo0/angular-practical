@@ -1,0 +1,27 @@
+:host {
+  --progress-angle: calc(360deg * var(--progress));
+  background: conic-gradient(var(--gray3) var(--progress-angle), var(--gray2) var(--progress-angle));
+  position: absolute;
+  top: 120px;
+  left: 80px;
+  --size: 200px;
+  width: var(--size);
+  height: var(--size);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-size: 22px;
+  padding: 10px;
+}
+
+:host > div {
+  background: var(--gray1);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}

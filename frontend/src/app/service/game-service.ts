@@ -66,8 +66,14 @@ export class GameService {
   private readonly _playerName = signal<string>('');
   public readonly playerName: Signal<string> = this._playerName.asReadonly();
 
+  private readonly _turn = signal<number>(0);
+  public readonly turn: Signal<number> = this._turn.asReadonly();
+
   private readonly _score = signal<number>(0);
   public readonly score: Signal<number> = this._score.asReadonly();
+
+  private readonly _scoreLimit = signal<number>(0);
+  public readonly scoreLimit: Signal<number> = this._scoreLimit.asReadonly();
 
   private readonly _turnNumber = signal<number>(0);
   public readonly turnNumber: Signal<number> = this._turnNumber.asReadonly();
@@ -85,6 +91,7 @@ export class GameService {
   public createGame(playerName: string, map: MapModel): void {
     this._playerName.set(playerName);
     this.mapService.setCurrentMap(map);
+    this.nextTurn()
   }
 
   public selectAnimal(animal: Animal | null): void {
@@ -124,7 +131,7 @@ export class GameService {
       ) * animals[animal];
     });
 
-    return score;
+    return Math.max(score, 0);
   }
 
   public placeSelectedAnimal(tile: TileModel): void {
@@ -153,6 +160,7 @@ export class GameService {
     this._score.update(
       score => score + this.computeScore(tile, selectedAnimal),
     );
+    this.nextTurn();
     console.log(this._score());
 
     this.mapService.currentMap().tiles[tile.y][tile.x] = new TileModel(
@@ -175,7 +183,6 @@ export class GameService {
     }
   }
 
-  // TODO: implement GameService.checkGameEnd
   private checkGameEnd(): boolean {
     const inventory = this._inventory();
     const bearCount = inventory[Animal.BEAR];
@@ -202,6 +209,20 @@ export class GameService {
 
     return ((!groundTileEmpty && (!waterTileEmpty || fishCount === 0)) ||
             (!waterTileEmpty && bearCount === 0 && foxCount === 0));
+  }
+
+  private nextTurn(): void {
+    if (this.score() < this.scoreLimit()) return;
+
+    this._turn.update(turn => turn + 1);
+    this._inventory.update(inventory => {
+      ++inventory[Animal.BEAR];
+      ++inventory[Animal.FISH];
+      ++inventory[Animal.FOX];
+      return inventory;
+    });
+    this._scoreLimit.update(scoreLimit => scoreLimit + 8 * this.turn())
+    this.nextTurn();
   }
 
   // TODO: implement GameService.terminateGame

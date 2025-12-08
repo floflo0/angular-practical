@@ -4,7 +4,7 @@
   bottom: calc(var(--spacing) * 2);
   display: flex;
   gap: var(--spacing);
-  background-color: var(--gray);
+  background-color: var(--gray1);
   padding: calc(var(--spacing) * 2) var(--spacing);
   border-radius: 10px;
   box-shadow: 0px 0px 10px #00000077;
@@ -20,7 +20,7 @@
 }
 
 .animal-button:hover {
-  background-color: var(--gray);
+  background-color: var(--gray1);
   cursor: pointer;
 }
 
