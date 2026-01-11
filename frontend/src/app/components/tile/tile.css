@@ -34,7 +34,7 @@ img:hover {
 }
 
 img:active {
-  transform: translateY(5%);
+  transform: scale(1.05);
 }
 
 @keyframes appear {
