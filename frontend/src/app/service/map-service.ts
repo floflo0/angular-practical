@@ -33,7 +33,8 @@ export class MapService {
       }
       tiles.push(line);
     }
-    return new MapModel('', tiles);
+    const randomName = 'Map-' + Math.random().toString(36).substring(2, 9);
+    return new MapModel(randomName, tiles);
   }
 
   public async saveMap(map: MapModel): Promise<void> {

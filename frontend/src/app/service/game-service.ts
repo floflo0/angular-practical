@@ -88,7 +88,15 @@ export class GameService {
   public createGame(playerName: string, map: MapModel): void {
     this._playerName.set(playerName);
     this.mapService.setCurrentMap(map);
-    this.nextTurn()
+    this._turn.set(0);
+    this._score.set(0);
+    this._scoreLimit.set(0);
+    this._inventory.set({
+      [Animal.BEAR]: 0,
+      [Animal.FISH]: 0,
+      [Animal.FOX]: 0,
+    });
+    this.nextTurn();
   }
 
   public selectAnimal(animal: Animal | null): void {

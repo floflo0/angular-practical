@@ -4,6 +4,7 @@ import { GameView } from './components/game-view/game-view';
 
 export const routes: Routes = [
   { path: 'menu', component: StartMenu },
-  { path: 'game', component: GameView },
+  { path: 'game/:name', component: GameView },
+  { path: 'game', redirectTo: '/menu' },
   { path: '', redirectTo: '/menu', pathMatch: 'full' }
 ];

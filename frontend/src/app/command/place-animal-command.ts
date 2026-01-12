@@ -40,19 +40,23 @@ export class PlaceAnimalCommand extends UndoableCommand {
     console.assert(this.mementoScoreLimit !== undefined, 'mementoScoreLimit has not been initialized');
     console.assert(this.mementoInventory !== undefined, 'mementoInventory has not been initialized');
     console.assert(this.mementoMap !== undefined, 'mementoMap has not been initialized');
-    this.gameService.restoreState(
-      this.mementoTurn!,
-      this.mementoScore!,
-      this.mementoScoreLimit!,
-      { ...this.mementoInventory! },
-      this.mementoMap!.clone(),
-    );
+    if(this.mementoMap?.name === this.mapService.currentMap().name){
+      this.gameService.restoreState(
+        this.mementoTurn!,
+        this.mementoScore!,
+        this.mementoScoreLimit!,
+        { ...this.mementoInventory! },
+        this.mementoMap!.clone(),
+      );
+    }
   }
 
   public override redo(): void {
     console.assert(this.mementoSelectedAnimal !== undefined, 'mementoSelectedAnimal has not been initialized');
     console.assert(this.gameService.inventory()[this.mementoSelectedAnimal as Animal] !== 0);
-    this.gameService.selectAnimal(this.mementoSelectedAnimal as Animal | null);
-    this.execution();
+    if (this.mementoMap?.name === this.mapService.currentMap().name) {
+      this.gameService.selectAnimal(this.mementoSelectedAnimal as Animal | null);
+      this.execution();
+    }
   }
 }
