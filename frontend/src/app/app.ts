@@ -1,14 +1,9 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Map } from './components/map/map';
-import { InventorySelector } from './components/inventory-selector/inventory-selector';
-import { SelectedAnimal } from './components/selected-animal/selected-animal';
-import { Score } from './components/score/score';
-import { UndoRedo } from './components/undo-redo/undo-redo';
 
 @Component({
   selector: 'app-root',
-  imports: [InventorySelector, RouterOutlet, Score, SelectedAnimal, Map, UndoRedo],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

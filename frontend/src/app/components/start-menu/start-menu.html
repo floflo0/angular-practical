@@ -1,0 +1,33 @@
+<div class="start-menu">
+  <p>Select a map to play with:</p>
+
+  <div class="map-list">
+    @if (loading()) {
+      <div>Loading maps...</div>
+    }
+
+    @if (!loading() && mapNames().length === 0) {
+      <div>No map found..</div>
+    }
+
+    @for (name of mapNames(); track name) {
+      <div class="map-item" (click)="loadMap(name)">
+        <p>Play with "{{ name }}"</p>
+      </div>
+    }
+
+    <div class="map-item" (click)="generateNewMap()">
+      <p>Generate a random map</p>
+    </div>
+  </div>
+
+  <p class="hint">Click on a map item to launch the game with.</p>
+
+  <input
+    type="text"
+    class="player-name-input"
+    placeholder="Player name"
+    [value]="playerName()"
+    (input)="updatePlayerName($event)"
+  >
+</div>

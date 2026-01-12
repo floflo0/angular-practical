@@ -11,7 +11,7 @@ export const MAP_SIZE: number = 8;
   providedIn: 'root'
 })
 export class MapService {
-  private readonly _currentMap = signal<MapModel>(this.generateNewMap());
+  private readonly _currentMap = signal<MapModel>(new MapModel('', []));
   public readonly currentMap: Signal<MapModel> = this._currentMap.asReadonly();
 
   private readonly restService: RestService = inject(RestService);
@@ -59,7 +59,7 @@ export class MapService {
     }
   }
 
-  public getNumberTileTypeArroundTile(
+  public getNumberTileTypeAroundTile(
     tile: TileModel,
     radius: number,
     type: TileType,
@@ -71,7 +71,7 @@ export class MapService {
     return count;
   }
 
-  public getNumberAnimalArroundTile(
+  public getNumberAnimalAroundTile(
     tile: TileModel,
     radius: number,
     animal: Animal,

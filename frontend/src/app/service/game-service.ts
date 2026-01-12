@@ -112,7 +112,7 @@ export class GameService {
 
     Object.keys(tiles).forEach(key => {
       const tileType = Number(key) as TileType;
-      score += this.mapService.getNumberTileTypeArroundTile(
+      score += this.mapService.getNumberTileTypeAroundTile(
         tile,
         radius,
         tileType,
@@ -121,7 +121,7 @@ export class GameService {
 
     Object.keys(animals).forEach(key => {
       const animal = Number(key) as Animal;
-      score += this.mapService.getNumberAnimalArroundTile(
+      score += this.mapService.getNumberAnimalAroundTile(
         tile,
         radius,
         animal,
