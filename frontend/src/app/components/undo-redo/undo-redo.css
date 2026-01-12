@@ -1,0 +1,32 @@
+:host {
+  position: absolute;
+  right: 160px;
+  bottom: 80px;
+  background: var(--gray1);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: var(--spacing);
+  gap: 10px;
+}
+
+button {
+  background: transparent;
+  border: 1px solid #000;
+  border-radius: 10px;
+  height: 50px;
+}
+
+button:hover {
+  background: var(--gray2);
+}
+
+img {
+  width: 50px;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.end-game {
+  font-size: 13px;
+}

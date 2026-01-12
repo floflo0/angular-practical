@@ -14,4 +14,11 @@ export class MapModel {
   public get tiles() {
     return this._tiles;
   }
+
+  public clone(): MapModel {
+    return new MapModel(
+      this._name,
+      this._tiles.map(line => [...line]),
+    );
+  }
 }

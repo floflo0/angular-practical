@@ -75,9 +75,6 @@ export class GameService {
   private readonly _scoreLimit = signal<number>(0);
   public readonly scoreLimit: Signal<number> = this._scoreLimit.asReadonly();
 
-  private readonly _turnNumber = signal<number>(0);
-  public readonly turnNumber: Signal<number> = this._turnNumber.asReadonly();
-
   private readonly _selectedAnimal = signal<Animal | null>(null);
   public readonly selectedAnimal: Signal<Animal | null> = this._selectedAnimal.asReadonly();
 
@@ -134,7 +131,35 @@ export class GameService {
     return Math.max(score, 0);
   }
 
+  public canPlaceSelectedAnimal(tile: TileModel): boolean {
+    if (tile.animal !== null) return false;
+
+    const selectedAnimal = this._selectedAnimal();
+    switch (selectedAnimal) {
+      case null: return false;
+
+      case Animal.BEAR:
+        if (tile.type === TileType.WATER) return false;
+        break
+
+      case Animal.FISH:
+        if (tile.type !== TileType.WATER) return false;
+        break;
+
+      case Animal.FOX:
+        if (tile.type === TileType.WATER) return false;
+        break
+
+      default:
+        console.assert(false, 'unreachable');
+    }
+
+    return true;
+  }
+
   public placeSelectedAnimal(tile: TileModel): void {
+    console.assert(this.canPlaceSelectedAnimal(tile));
+
     if (tile.animal !== null) return;
 
     const selectedAnimal = this._selectedAnimal();
@@ -161,7 +186,6 @@ export class GameService {
       score => score + this.computeScore(tile, selectedAnimal),
     );
     this.nextTurn();
-    console.log(this._score());
 
     this.mapService.currentMap().tiles[tile.y][tile.x] = new TileModel(
       tile.type,
@@ -175,11 +199,29 @@ export class GameService {
     }));
 
     if (this.inventory()[selectedAnimal] === 0) {
-      this.selectAnimal(null);
+      this._selectedAnimal.set(null);
     }
 
     if (this.checkGameEnd()) {
       this.terminateGame();
+    }
+  }
+
+  public restoreState(
+    turn: number,
+    score: number,
+    scoreLimit: number,
+    inventory: Record<Animal, number>,
+    map: MapModel,
+  ): void {
+    this._turn.set(turn);
+    this._score.set(score);
+    this._scoreLimit.set(scoreLimit);
+    this._inventory.set(inventory);
+    this.mapService.setCurrentMap(map);
+    const selectedAnimal = this.selectedAnimal();
+    if (selectedAnimal !== null && this.inventory()[selectedAnimal] === 0) {
+      this._selectedAnimal.set(null);
     }
   }
 
