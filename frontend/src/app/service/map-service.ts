@@ -5,29 +5,60 @@ import { TileModel } from '../models/tile-model';
 import { getRandomTileType, TileType } from '../models/tile-type';
 import { Animal } from '../models/animal';
 
+/**
+ * Number of tiles in the map per side.
+ */
 export const MAP_SIZE: number = 8;
 
+/**
+ * Service that handle the maps of the game.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class MapService {
-  private readonly _currentMap = signal<MapModel>(new MapModel('', []));
-  public readonly currentMap: Signal<MapModel> = this._currentMap.asReadonly();
-
   private readonly restService: RestService = inject(RestService);
 
+  /**
+   * The map used by the current game.
+   */
+  private readonly _currentMap = signal<MapModel>(new MapModel('', []));
+  /**
+   * Read only view of _currentMap.
+   */
+  public readonly currentMap: Signal<MapModel> = this._currentMap.asReadonly();
+
+  /**
+   * Change the current map.
+   */
   public setCurrentMap(map: MapModel): void {
     this._currentMap.set(map);
   }
 
+  /**
+   * Returns all the map names from the backend.
+   *
+   * @returns a list of map names.
+   */
   public getMapNames(): Promise<string[]> {
     return this.restService.getMapNames();
   }
 
+  /**
+   * Returns the map with the corresponding name.
+   *
+   * @param mapName The name of the map to get.
+   * @returns the map.
+   */
   public async getMap(mapName: string): Promise<MapModel> {
     return await this.restService.getMap(mapName);
   }
 
+  /**
+   * Generate a new random map.
+   *
+   * @returns the generated map.
+   */
   public generateNewMap(): MapModel {
     const tiles: TileModel[][] = [];
     for (let y = 0; y < MAP_SIZE; ++y) {
@@ -41,10 +72,21 @@ export class MapService {
     return new MapModel(randomName, tiles);
   }
 
+  /**
+   * Save a map to the backend.
+   */
   public async saveMap(map: MapModel): Promise<void> {
     await this.restService.saveMap(map);
   }
 
+  /**
+   * Iterates over all tiles within a square radius around a given tile,
+   * excluding the tile itself, and applies a callback to each.
+   *
+   * @param tile The central tile to iterate around.
+   * @param radius The radius in tiles to include around the central tile.
+   * @param callback the callback to execute for each tile.
+   */
   private iterateRadius(
     tile: TileModel,
     radius: number,
@@ -64,6 +106,15 @@ export class MapService {
     }
   }
 
+  /**
+   * Compute the number of tile of a certain type around in the square radius
+   * around a given tile.
+   *
+   * @param tile The central tile to count around.
+   * @param radius The radius in tiles.
+   * @param type The type of tile to count.
+   * @returns the number of tile of the type.
+   */
   public getNumberTileTypeAroundTile(
     tile: TileModel,
     radius: number,
@@ -76,6 +127,15 @@ export class MapService {
     return count;
   }
 
+  /**
+   * Compute the number of tiles containing a certain animal in the square
+   * radius around a given tile.
+   *
+   * @param tile The central tile to count around.
+   * @param radius The radius in tiles.
+   * @param animal The animal to count.
+   * @returns the number of times the animal was found.
+   */
   public getNumberAnimalAroundTile(
     tile: TileModel,
     radius: number,

@@ -3,7 +3,7 @@ import { Map } from '../map/map';
 import { InventorySelector } from '../inventory-selector/inventory-selector';
 import { SelectedAnimal } from '../selected-animal/selected-animal';
 import { Score } from '../score/score';
-import {UndoRedo} from '../undo-redo/undo-redo';
+import { UndoRedo } from '../undo-redo/undo-redo';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameService } from '../../service/game-service';
 import { MapService } from '../../service/map-service';

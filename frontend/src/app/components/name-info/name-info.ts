@@ -1,7 +1,7 @@
-import {Component, computed, inject} from '@angular/core';
-import {MapService} from '../../service/map-service';
-import {GameService} from '../../service/game-service';
-import {FormsModule} from '@angular/forms';
+import { Component, computed, inject } from '@angular/core';
+import { MapService } from '../../service/map-service';
+import { GameService } from '../../service/game-service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-name-info',

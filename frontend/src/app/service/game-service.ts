@@ -12,6 +12,9 @@ type ScoreRule = {
   animals: Record<Animal, number>,
 };
 
+/**
+ * Object containing the rules to compute the score.
+ */
 const SCORE_RULES: Record<Animal, ScoreRule> = {
   [Animal.BEAR]: {
     points: 6,
@@ -57,6 +60,9 @@ const SCORE_RULES: Record<Animal, ScoreRule> = {
   },
 };
 
+/**
+ * Service that handle the state of the game.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -66,28 +72,71 @@ export class GameService {
   readonly MIN_PLAYER_NAME_LENGTH = 3;
   readonly MAX_PLAYER_NAME_LENGTH = 16;
 
+  /**
+   * The name of the player.
+   */
   private readonly _playerName = signal<string>('');
+  /**
+   * Read only view of _playerName.
+   */
   public readonly playerName: Signal<string> = this._playerName.asReadonly();
 
+  /**
+   * The id of the turn of the current game.
+   */
   private readonly _turn = signal<number>(0);
+  /**
+   * Read only view of _turn.
+   */
   public readonly turn: Signal<number> = this._turn.asReadonly();
 
+  /**
+   * The score of the current game.
+   */
   private readonly _score = signal<number>(0);
+  /**
+   * Read only view of _score.
+   */
   public readonly score: Signal<number> = this._score.asReadonly();
 
+  /**
+   * The score to reach in order to go to the next turn.
+   */
   private readonly _scoreLimit = signal<number>(0);
+  /**
+   * Read only view of _scoreLimit.
+   */
   public readonly scoreLimit: Signal<number> = this._scoreLimit.asReadonly();
 
+  /**
+   * The animal selected by the player, null if no animal is selected.
+   */
   private readonly _selectedAnimal = signal<Animal | null>(null);
+  /**
+   * Read only view of _selectedAnimal.
+   */
   public readonly selectedAnimal: Signal<Animal | null> = this._selectedAnimal.asReadonly();
 
+  /**
+   * The current inventory of the player. For each animal, it contains the number
+   * of animal available to place.
+   */
   private readonly _inventory  = signal<Record<Animal, number>>({
     [Animal.BEAR]: 0,
     [Animal.FISH]: 0,
     [Animal.FOX]: 0,
   });
+  /**
+   * Read only view of _inventory.
+   */
   public readonly inventory = this._inventory.asReadonly();
 
+  /**
+   * Create a new game and reset the game state.
+   *
+   * @param playerName The name of the player for the new game.
+   * @param map The map to use in the new game.
+   */
   public createGame(playerName: string, map: MapModel): void {
     this._playerName.set(playerName);
     this.mapService.setCurrentMap(map);
@@ -102,6 +151,11 @@ export class GameService {
     this.nextTurn();
   }
 
+  /**
+   * Change the animal selected by the player.
+   *
+   * @param animal The new selected animal, null if no animal is selected.
+   */
   public selectAnimal(animal: Animal | null): void {
     if (animal !== null && this._inventory()[animal] == 0) return;
 
@@ -111,8 +165,8 @@ export class GameService {
   /**
     * Return the number of points given by the animal when placed on the tile.
     *
-    * @param tile - The tile where the animal will be placed.
-    * @param animal - The animal to place.
+    * @param tile The tile where the animal will be placed.
+    * @param animal The animal to place.
     *
     * @returns the number of points.
     */
@@ -142,6 +196,13 @@ export class GameService {
     return Math.max(score, 0);
   }
 
+  /**
+   * Return true if the player can place the selected animal on the tile.
+   *
+   * @param tile The tile to check.
+   *
+   * @returns true if the animal can be placed.
+   */
   public canPlaceSelectedAnimal(tile: TileModel): boolean {
     if (tile.animal !== null) return false;
 
@@ -168,6 +229,11 @@ export class GameService {
     return true;
   }
 
+  /**
+   * Place the selected animal on the tile.
+   *
+   * @param tile The tile to place the animal on.
+   */
   public placeSelectedAnimal(tile: TileModel): void {
     console.assert(this.canPlaceSelectedAnimal(tile));
 
@@ -218,6 +284,15 @@ export class GameService {
     }
   }
 
+  /**
+   * Restore the game state to a previous state.
+   *
+   * @param turn The turn to go back to.
+   * @param score The score to go back to.
+   * @param scoreLimit The score limit to go back to.
+   * @param inventory The inventory to go back to.
+   * @param map The map state to go back to.
+   */
   public restoreState(
     turn: number,
     score: number,
@@ -236,6 +311,16 @@ export class GameService {
     }
   }
 
+  /**
+   * Check if the end of the game is triggered.
+   *
+   * The game can be finished if
+   * - The inventory is empty.
+   * - The player can't place his remaining animals.
+   * - All tiles contains animals.
+   *
+   * @returns true if the game is finished.
+   */
   private checkGameEnd(): boolean {
     const inventory = this._inventory();
     const bearCount = inventory[Animal.BEAR];
@@ -264,6 +349,10 @@ export class GameService {
             (!waterTileEmpty && bearCount === 0 && foxCount === 0));
   }
 
+  /**
+   * If the score limit is reach, increment the turn id, compute the new
+   * score limit and give the player new animals to place.
+   */
   private nextTurn(): void {
     if (this.score() < this.scoreLimit()) return;
 
@@ -282,10 +371,20 @@ export class GameService {
   public terminateGame(): void {
   }
 
+  /**
+   * Update the player name.
+   *
+   * @param playerName The new player name.
+   */
   public setPlayerName(playerName: string): void {
     this._playerName.set(playerName);
   }
 
+  /**
+   * Generate a random name for the player and returns it.
+   *
+   * @returns the generated name.
+   */
   public generateNewName(): string {
     this._playerName.set('Player-' + Math.random().toString(36).substring(2, 9));
     return this.playerName();
