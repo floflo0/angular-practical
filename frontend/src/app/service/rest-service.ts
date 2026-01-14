@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { MapModel } from '../models/map-model';
-import { MAP_SIZE } from './map-service';
-import { TileType } from '../models/tile-type';
-import { TileModel } from '../models/tile-model';
+import {Injectable} from '@angular/core';
+import {MapModel} from '../models/map-model';
+import {MAP_SIZE} from './map-service';
+import {TileType} from '../models/tile-type';
+import {TileModel} from '../models/tile-model';
 
 const API_ROOT: string = `${window.location.origin}/api/maps/`;
 
@@ -47,8 +47,7 @@ export class RestService {
         y,
       )));
     }
-    const map = new MapModel(name, tilesArray);
-    return map;
+    return new MapModel(name, tilesArray);
   }
 
   public async saveMap(map: MapModel): Promise<void> {

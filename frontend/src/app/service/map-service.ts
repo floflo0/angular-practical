@@ -24,6 +24,10 @@ export class MapService {
     return this.restService.getMapNames();
   }
 
+  public async getMap(mapName: string): Promise<MapModel> {
+    return await this.restService.getMap(mapName);
+  }
+
   public generateNewMap(): MapModel {
     const tiles: TileModel[][] = [];
     for (let y = 0; y < MAP_SIZE; ++y) {

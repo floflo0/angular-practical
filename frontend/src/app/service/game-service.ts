@@ -63,6 +63,9 @@ const SCORE_RULES: Record<Animal, ScoreRule> = {
 export class GameService {
   private mapService: MapService = inject(MapService);
 
+  readonly MIN_PLAYER_NAME_LENGTH = 3;
+  readonly MAX_PLAYER_NAME_LENGTH = 16;
+
   private readonly _playerName = signal<string>('');
   public readonly playerName: Signal<string> = this._playerName.asReadonly();
 
@@ -281,5 +284,10 @@ export class GameService {
 
   public setPlayerName(playerName: string): void {
     this._playerName.set(playerName);
+  }
+
+  public generateNewName(): string {
+    this._playerName.set('Player-' + Math.random().toString(36).substring(2, 9));
+    return this.playerName();
   }
 }

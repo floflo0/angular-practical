@@ -30,4 +30,10 @@
     [value]="playerName()"
     (input)="updatePlayerName($event)"
   >
+  @if (!this.validName()) {
+    <div class="error-message">
+      Invalid player name : name must be between
+      {{this.MIN_PLAYER_NAME_LENGTH}} and {{this.MAX_PLAYER_NAME_LENGTH}}
+    </div>
+  }
 </div>

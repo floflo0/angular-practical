@@ -1,0 +1,22 @@
+<div class="name-info-container">
+  <div class="info-item">
+    <span class="label">Map:</span>
+    <span class="value">{{ mapName() }}</span>
+  </div>
+  <div class="info-item">
+    <label for="playerName" class="label">Player:</label>
+    <input
+      id="playerName"
+      type="text"
+      [value]="playerName()"
+      (input)="updatePlayerName($event)"
+      [class.invalid]="!validName()"
+      [placeholder]="'Enter player name'"
+    />
+  </div>
+  @if (!validName()) {
+    <div class="error-message">
+      Name must be between {{ MIN_PLAYER_NAME_LENGTH }} and {{ MAX_PLAYER_NAME_LENGTH }} characters.
+    </div>
+  }
+</div>
