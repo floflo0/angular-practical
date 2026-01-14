@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -24,7 +23,7 @@ public class MapService {
     public List<String> getMapNames() {
         return repository.findAllAsList().stream()
                 .map(MapEntity::getName)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public MapDto getMapByName(String name) {
@@ -35,6 +34,11 @@ public class MapService {
 
     public MapDto saveMap(MapDto dto) {
         validateDto(dto);
+
+        repository.findByName(dto.getName()).ifPresent(existing -> {
+            throw new BadRequestException("Map already exists: " + dto.getName());
+        });
+
         MapEntity entity = toEntity(dto);
         MapEntity saved = repository.save(entity);
         return toDto(saved);

@@ -2,7 +2,9 @@ package game.model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "maps")
@@ -12,19 +14,16 @@ public class MapEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String name;
-
-    @ElementCollection
-    @CollectionTable(name = "map_tiles", joinColumns = @JoinColumn(name = "map_id"))
-    @Column(name = "tile_value", nullable = false)
-    private List<Integer> tiles = new ArrayList<>();
+    @Column(name = "tiles", nullable = false, length = 64)
+    private String tilesData;
 
     public MapEntity() {}
 
     public MapEntity(String name, List<Integer> tiles) {
         this.name = name;
-        this.tiles = tiles;
+        setTiles(tiles);
     }
 
     public Integer getId() {
@@ -44,11 +43,22 @@ public class MapEntity {
     }
 
     public List<Integer> getTiles() {
-        return tiles;
+        if (tilesData == null || tilesData.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return tilesData.chars()
+                .mapToObj(Character::getNumericValue)
+                .collect(Collectors.toList());
     }
 
     public void setTiles(List<Integer> tiles) {
-        this.tiles = tiles;
+        if (tiles == null || tiles.isEmpty()) {
+            this.tilesData = "";
+            return;
+        }
+        this.tilesData = tiles.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining());
     }
 
     @Override
@@ -56,7 +66,7 @@ public class MapEntity {
         return "MapEntity{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", tiles=" + tiles +
+                ", tiles=" + getTiles() +
                 '}';
     }
 }

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /*
-Liste des tests :
+Tests List :
 1. getMapNames_success
 2. getMapByName_found
 3. getMapByName_notFound
@@ -117,28 +117,18 @@ class MapServiceTest {
     }
 
     // ---------------------------------------------------------
-    // 5. saveMap_create_duplicateName (nouveau comportement : autorisé)
+    // 5. saveMap_create_duplicateName
     // ---------------------------------------------------------
     @Test
     void saveMap_create_duplicateName() {
         MapDto dto = new MapDto(null, "existing", validTiles());
+        MapEntity existing = new MapEntity("existing", validTiles());
 
-        MapEntity savedEntity = new MapEntity();
-        savedEntity.setId(2);
-        savedEntity.setName("existing");
-        savedEntity.setTiles(validTiles());
+        when(repo.findByName("existing")).thenReturn(Optional.of(existing));
 
-        when(repo.save(any(MapEntity.class))).thenReturn(savedEntity);
+        assertThrows(BadRequestException.class, () -> service.saveMap(dto));
 
-        MapDto result = service.saveMap(dto);
-
-        verify(repo, times(1)).save(any(MapEntity.class));
-
-        System.out.println("RETRIEVED: " + result);
-        System.out.println("EXPECTED : Creation OK even with duplicate name");
-
-        assertEquals(2, result.getId());
-        assertEquals("existing", result.getName());
+        verify(repo, never()).save(any(MapEntity.class));
     }
 
     // ---------------------------------------------------------

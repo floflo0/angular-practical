@@ -20,14 +20,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /*
-Liste des tests :
-1. createMap_success             → crée une map valide
-2. createMap_duplicateName       → crée une seconde map avec le même nom
-3. createMap_invalidTiles        → tente de créer une map avec des tiles invalides (size != 64)
-4. createMap_emptyName           → tente de créer une map avec un nom vide
-5. getMapByName_found            → récupère une map existante par son nom
-6. getMapByName_notFound         → tente de récupérer une map inexistante
-7. getAllMapNames                → récupère la liste de tous les noms de maps
+Tests List :
+1. createMap_success             → create a valid map
+2. createMap_duplicateName       → create a second map with the same name
+3. createMap_invalidTiles        → create a map with invalid tile number (size != 64)
+4. createMap_emptyName           → create a map with an empty name
+5. getMapByName_found            → get an existing map by its name
+6. getMapByName_notFound         → get a non-existing map
+7. getAllMapNames                → get a list with all map names
 */
 
 @SpringBootTest
@@ -78,7 +78,7 @@ class MapControllerTest {
     }
 
     // -------------------------------------------------------------------------
-    // 2. createMap_duplicateName → doit créer un second enregistrement
+    // 2. createMap_duplicateName
     // -------------------------------------------------------------------------
     @Test
     void createMap_duplicateName() throws Exception {
@@ -94,14 +94,14 @@ class MapControllerTest {
         mockMvc.perform(post("/api/maps")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isCreated())
+                .andExpect(status().isBadRequest())
                 .andDo(result -> {
                     String retrieved = result.getResponse().getContentAsString();
                     System.out.println("RETRIEVED: " + retrieved);
-                    System.out.println("EXPECTED : new Map with same name");
+                    System.out.println("EXPECTED : 400 Bad Request (duplicate name)");
                 });
 
-        assertThat(repo.count()).isEqualTo(2);
+        assertThat(repo.count()).isEqualTo(1);
     }
 
     // -------------------------------------------------------------------------

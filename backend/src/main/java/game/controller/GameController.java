@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/maps")
@@ -21,13 +21,13 @@ public class GameController {
         this.service = service;
     }
 
-    // GET /maps -> list of names
+    // GET /maps -> return a list with map names
     @GetMapping
     public ResponseEntity<List<String>> getMapNames() {
         return ResponseEntity.ok(service.getMapNames());
     }
 
-    // GET /maps/by-name?name=... -> search map by name
+    // GET /maps/by-name?name=... -> search a map by its name
     @GetMapping("/by-name")
     public ResponseEntity<MapDto> getMapByName(@RequestParam("name") String name) {
         try {
@@ -38,7 +38,7 @@ public class GameController {
         }
     }
 
-    // POST /maps -> create map
+    // POST /maps -> create a map
     @PostMapping
     public ResponseEntity<MapDto> saveMap(@RequestBody MapDto mapDto) {
         try {
