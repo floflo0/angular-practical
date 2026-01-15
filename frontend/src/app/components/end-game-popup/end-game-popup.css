@@ -1,0 +1,7 @@
+:host {
+  min-width: 250px;
+  background: var(--gray1);
+  padding: var(--spacing);
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px #00000077;
+}

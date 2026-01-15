@@ -4,6 +4,8 @@ import { MapService } from './map-service';
 import { Animal } from '../models/animal';
 import { TileModel } from '../models/tile-model';
 import { TileType } from '../models/tile-type';
+import { OverlayService } from './overlay-service';
+import { EndGamePopup } from '../components/end-game-popup/end-game-popup';
 
 type ScoreRule = {
   points: number,
@@ -68,6 +70,7 @@ const SCORE_RULES: Record<Animal, ScoreRule> = {
 })
 export class GameService {
   private mapService: MapService = inject(MapService);
+  private overlayService: OverlayService = inject(OverlayService);
 
   readonly MIN_PLAYER_NAME_LENGTH = 3;
   readonly MAX_PLAYER_NAME_LENGTH = 16;
@@ -143,6 +146,7 @@ export class GameService {
     this._turn.set(0);
     this._score.set(0);
     this._scoreLimit.set(0);
+    this._selectedAnimal.set(null);
     this._inventory.set({
       [Animal.BEAR]: 0,
       [Animal.FISH]: 0,
@@ -369,6 +373,8 @@ export class GameService {
 
   // TODO: implement GameService.terminateGame
   public terminateGame(): void {
+    console.log('terminateGame');
+    this.overlayService.open(EndGamePopup, false);
   }
 
   /**

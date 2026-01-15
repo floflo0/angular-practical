@@ -1,14 +1,22 @@
-import { Injectable} from '@angular/core';
+import { inject, Injectable} from '@angular/core';
 import { ComponentType, Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal} from '@angular/cdk/portal';
+import { NavigationStart, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OverlayService {
+  private readonly router = inject(Router);
+
   private overlayRef: OverlayRef | undefined;
 
   public constructor(private readonly overlay: Overlay) {
+    // Close the overlay if the page change due to the user going back.
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationStart))
+      .subscribe(() => this.dispose());
   }
 
   public open(type: ComponentType<any>, closeOnClick: boolean): void {
