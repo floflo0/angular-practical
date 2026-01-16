@@ -11,7 +11,7 @@ import { Animal } from '../models/animal';
 export const MAP_SIZE: number = 8;
 
 /**
- * Service that handle the maps of the game.
+ * Service that handles the maps of the game.
  */
 @Injectable({
   providedIn: 'root'
@@ -24,12 +24,14 @@ export class MapService {
    */
   private readonly _currentMap = signal<MapModel>(new MapModel('', []));
   /**
-   * Read only view of _currentMap.
+   * Read-only view of _currentMap.
    */
   public readonly currentMap: Signal<MapModel> = this._currentMap.asReadonly();
 
   /**
    * Change the current map.
+   *
+   * @param map The new map to use.
    */
   public setCurrentMap(map: MapModel): void {
     this._currentMap.set(map);
@@ -74,6 +76,8 @@ export class MapService {
 
   /**
    * Save a map to the backend.
+   *
+   * @param map The map to save.
    */
   public async saveMap(map: MapModel): Promise<void> {
     await this.restService.saveMap(map);
@@ -107,13 +111,14 @@ export class MapService {
   }
 
   /**
-   * Compute the number of tile of a certain type around in the square radius
+   * Compute the number of tiles of a certain type in the square radius
    * around a given tile.
    *
    * @param tile The central tile to count around.
    * @param radius The radius in tiles.
    * @param type The type of tile to count.
-   * @returns the number of tile of the type.
+   *
+   * @returns the number of tiles of the type.
    */
   public getNumberTileTypeAroundTile(
     tile: TileModel,
@@ -134,6 +139,7 @@ export class MapService {
    * @param tile The central tile to count around.
    * @param radius The radius in tiles.
    * @param animal The animal to count.
+   *
    * @returns the number of times the animal was found.
    */
   public getNumberAnimalAroundTile(

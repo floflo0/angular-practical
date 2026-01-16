@@ -16,8 +16,8 @@ export class RestService {
   /**
    * Make an HTTP request to the backend.
    *
-   * @param url The url of the request.
-   * @param method The method of the request.
+   * @param url The URL of the request.
+   * @param method The HTTP method (GET or POST).
    * @param body The body of the request.
    * @returns The response of the request.
    */
@@ -53,7 +53,7 @@ export class RestService {
    * Get the map with the corresponding name from the backend.
    *
    * @param queryName The name of the map to get.
-   * @returns The map.
+   * @returns The map with the corresponding name.
    */
   public async getMap(queryName: string): Promise<MapModel> {
     const url = new URL('by-name', API_ROOT);
@@ -75,7 +75,7 @@ export class RestService {
   /**
    * Save a map to the backend.
    *
-   * @param map The map to save.
+   * @param map The map to save to the backend.
    */
   public async saveMap(map: MapModel): Promise<void> {
     const { name, tiles } = map;

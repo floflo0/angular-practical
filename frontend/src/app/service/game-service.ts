@@ -80,7 +80,7 @@ export class GameService {
    */
   private readonly _playerName = signal<string>('');
   /**
-   * Read only view of _playerName.
+   * Read-only view of _playerName.
    */
   public readonly playerName: Signal<string> = this._playerName.asReadonly();
 
@@ -89,7 +89,7 @@ export class GameService {
    */
   private readonly _turn = signal<number>(0);
   /**
-   * Read only view of _turn.
+   * Read-only view of _turn.
    */
   public readonly turn: Signal<number> = this._turn.asReadonly();
 
@@ -98,16 +98,16 @@ export class GameService {
    */
   private readonly _score = signal<number>(0);
   /**
-   * Read only view of _score.
+   * Read-only view of _score.
    */
   public readonly score: Signal<number> = this._score.asReadonly();
 
   /**
-   * The score to reach in order to go to the next turn.
+   * The score to reach to go to the next turn.
    */
   private readonly _scoreLimit = signal<number>(0);
   /**
-   * Read only view of _scoreLimit.
+   * Read-only view of _scoreLimit.
    */
   public readonly scoreLimit: Signal<number> = this._scoreLimit.asReadonly();
 
@@ -116,19 +116,22 @@ export class GameService {
    */
   private readonly _selectedAnimal = signal<Animal | null>(null);
   /**
-   * Read only view of _selectedAnimal.
+   * Read-only view of _selectedAnimal.
    */
   public readonly selectedAnimal: Signal<Animal | null> = this._selectedAnimal.asReadonly();
 
+  /**
+   * The tile hovered by the player, null if no tile is hovered.
+   */
   private readonly _hoveredTile = signal<TileModel | null>(null);
   /**
-   * Read only view of _hoveredTile.
+   * Read-only view of _hoveredTile.
    */
   public readonly hoveredTile: Signal<TileModel | null> = this._hoveredTile.asReadonly();
 
   /**
    * The current inventory of the player. For each animal, it contains the number
-   * of animal available to place.
+   * of animals available to place.
    */
   private readonly _inventory  = signal<Record<Animal, number>>({
     [Animal.BEAR]: 0,
@@ -136,7 +139,7 @@ export class GameService {
     [Animal.FOX]: 0,
   });
   /**
-   * Read only view of _inventory.
+   * Read-only view of _inventory.
    */
   public readonly inventory = this._inventory.asReadonly();
 
@@ -151,7 +154,7 @@ export class GameService {
     this.mapService.setCurrentMap(map);
     this._turn.set(1);
     this._score.set(0);
-    this._scoreLimit.set(8);
+    this._scoreLimit.set(this.calculateScoreLimit(0, 8));
     this._selectedAnimal.set(null);
     this._inventory.set({
       [Animal.BEAR]: 1,
@@ -163,7 +166,7 @@ export class GameService {
   /**
    * Change the animal selected by the player.
    *
-   * @param animal The new selected animal, null if no animal is selected.
+   * @param animal The newly selected animal, null if no animal is selected.
    */
   public selectAnimal(animal: Animal | null): void {
     if (animal !== null && this._inventory()[animal] == 0) return;
@@ -171,10 +174,23 @@ export class GameService {
     this._selectedAnimal.set(animal);
   }
 
+  /**
+   * Set the hovered tile.
+   *
+   * @param tile The tile that is hovered.
+   */
   public setHoveredTile(tile: TileModel | null): void {
     this._hoveredTile.set(tile);
   }
 
+  /**
+   * Return the score contributions of the tile for the animal.
+   *
+   * @param tile The tile to check.
+   * @param animal The animal to check.
+   *
+   * @returns A map of tiles that contribute to the score of the tile for the animal.
+   */
   public getScoreContributions(tile: TileModel, animal: Animal): Map<TileModel, number> {
     const { points, radius, tiles, animals } = SCORE_RULES[animal];
     const contributions = new Map<TileModel, number>();
@@ -268,7 +284,7 @@ export class GameService {
 
       case Animal.BEAR:
         if (tile.type === TileType.WATER) return false;
-        break
+        break;
 
       case Animal.FISH:
         if (tile.type !== TileType.WATER) return false;
@@ -276,7 +292,7 @@ export class GameService {
 
       case Animal.FOX:
         if (tile.type === TileType.WATER) return false;
-        break
+        break;
 
       default:
         console.assert(false, 'unreachable');
@@ -373,7 +389,7 @@ export class GameService {
    * The game can be finished if
    * - The inventory is empty.
    * - The player can't place his remaining animals.
-   * - All tiles contains animals.
+   * - All tiles contain animals.
    *
    * @returns true if the game is finished.
    */
@@ -406,8 +422,8 @@ export class GameService {
   }
 
   /**
-   * If the score limit is reach, increment the turn id, compute the new
-   * score limit and give the player new animals to place.
+   * If the score limit is reached, increment the turn id, compute the new
+   * score limit, and then give the player new animals to place.
    */
   private nextTurn(): void {
     if (this.score() < this.scoreLimit()) return;
@@ -419,11 +435,24 @@ export class GameService {
       ++inventory[Animal.FOX];
       return inventory;
     });
-    this._scoreLimit.update(scoreLimit => scoreLimit + 8 * this.turn())
+    this._scoreLimit.update(scoreLimit => this.calculateScoreLimit(this.turn(), scoreLimit));
     this.nextTurn();
   }
 
-  // TODO: implement GameService.terminateGame
+  /**
+   * Calculate the new score limit based on the current turn and score limit.
+   *
+   * @param turn The current turn.
+   * @param scoreLimit The current score limit.
+   * @returns the new score limit.
+   */
+  private calculateScoreLimit(turn: number, scoreLimit: number): number {
+    return scoreLimit + 8 * turn;
+  }
+
+  /**
+   * End the game and display the end game popup.
+   */
   public terminateGame(): void {
     console.log('terminateGame');
     this.overlayService.open(EndGamePopup, false);
