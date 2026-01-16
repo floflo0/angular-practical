@@ -1,9 +1,28 @@
-<img
-  [src]="svgPath()"
-  [alt]="altMessage()"
-  ioClick
-  (clickBinder)="setUpClickCommand($event)"
-  draggable="false"
+<div
+  class="tile-container"
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()"
   [style.--x]="tile().x"
   [style.--y]="tile().y"
-/>
+>
+  <img
+    [src]="svgPath()"
+    [alt]="altMessage()"
+    ioClick
+    (clickBinder)="setUpClickCommand($event)"
+    draggable="false"
+  />
+  @if (canShowPreview()) {
+    <img
+      [src]="previewSvgPath()"
+      class="preview-animal"
+      alt="Aperçu animal"
+      draggable="false"
+    />
+  }
+  @if (potentialScore() !== null) {
+    <div class="score-badge" [class.positive]="potentialScore()! > 0" [class.negative]="potentialScore()! < 0">
+      {{ scoreText() }}
+    </div>
+  }
+</div>

@@ -1,4 +1,4 @@
-img {
+.tile-container {
   position: absolute;
   width: var(--tile-width);
   height: var(--tile-full-height);
@@ -12,11 +12,6 @@ img {
     0.5 * var(--tile-width) +
     0.5 * var(--map-width)
   );
-  animation: appear 300ms ease-in-out forwards;
-  animation-fill-mode: backwards;
-  animation-delay: calc(50ms * (var(--x) + var(--y)));
-  transition: transform 50ms ease-in-out;
-  user-select: none;
   clip-path: polygon(
     50% 0,
     100% 43.448275862068964%,
@@ -28,6 +23,17 @@ img {
   );
 }
 
+img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  animation: appear 300ms ease-in-out forwards;
+  animation-fill-mode: backwards;
+  animation-delay: calc(50ms * (var(--x) + var(--y)));
+  transition: transform 50ms ease-in-out;
+  user-select: none;
+}
+
 img:hover {
   cursor: pointer;
   transform: translateY(-5%);
@@ -35,6 +41,50 @@ img:hover {
 
 img:active {
   transform: scale(1.05);
+}
+
+.preview-animal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 5;
+  animation: none;
+}
+
+.score-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  z-index: 10;
+  border: 2px solid #666;
+}
+
+.score-badge.positive {
+  color: #ffffff;
+  border-color: #000000;
+  background-color: #2ecc4e;
+}
+
+.score-badge.negative {
+  color: #ffffff;
+  border-color: #000000;
+  background-color: #E74C3C;
 }
 
 @keyframes appear {

@@ -1,6 +1,6 @@
 import { inject, Injectable, Signal, signal } from '@angular/core';
 import { MapModel } from '../models/map-model';
-import { MapService } from './map-service';
+import { MAP_SIZE, MapService } from './map-service';
 import { Animal } from '../models/animal';
 import { TileModel } from '../models/tile-model';
 import { TileType } from '../models/tile-type';
@@ -120,6 +120,12 @@ export class GameService {
    */
   public readonly selectedAnimal: Signal<Animal | null> = this._selectedAnimal.asReadonly();
 
+  private readonly _hoveredTile = signal<TileModel | null>(null);
+  /**
+   * Read only view of _hoveredTile.
+   */
+  public readonly hoveredTile: Signal<TileModel | null> = this._hoveredTile.asReadonly();
+
   /**
    * The current inventory of the player. For each animal, it contains the number
    * of animal available to place.
@@ -143,16 +149,15 @@ export class GameService {
   public createGame(playerName: string, map: MapModel): void {
     this._playerName.set(playerName);
     this.mapService.setCurrentMap(map);
-    this._turn.set(0);
+    this._turn.set(1);
     this._score.set(0);
-    this._scoreLimit.set(0);
+    this._scoreLimit.set(8);
     this._selectedAnimal.set(null);
     this._inventory.set({
-      [Animal.BEAR]: 0,
+      [Animal.BEAR]: 1,
       [Animal.FISH]: 0,
       [Animal.FOX]: 0,
     });
-    this.nextTurn();
   }
 
   /**
@@ -164,6 +169,53 @@ export class GameService {
     if (animal !== null && this._inventory()[animal] == 0) return;
 
     this._selectedAnimal.set(animal);
+  }
+
+  public setHoveredTile(tile: TileModel | null): void {
+    this._hoveredTile.set(tile);
+  }
+
+  public getScoreContributions(tile: TileModel, animal: Animal): Map<TileModel, number> {
+    const { points, radius, tiles, animals } = SCORE_RULES[animal];
+    const contributions = new Map<TileModel, number>();
+
+    if (points !== 0) {
+      contributions.set(tile, points);
+    }
+
+    const yMin = Math.max(tile.y - radius, 0);
+    const yMax = Math.min(tile.y + radius, MAP_SIZE - 1);
+    const xMin = Math.max(tile.x - radius, 0);
+    const xMax = Math.min(tile.x + radius, MAP_SIZE - 1);
+    const mapTiles = this.mapService.currentMap().tiles;
+
+    for (let y = yMin; y <= yMax; ++y) {
+      for (let x = xMin; x <= xMax; ++x) {
+        if (x === tile.x && y === tile.y) continue;
+        const currentTile = mapTiles[y][x];
+        let score = 0;
+
+        Object.keys(tiles).forEach(key => {
+          const tileType = Number(key) as TileType;
+          if (currentTile.animal === null && currentTile.type === tileType) {
+            score += tiles[tileType];
+          }
+        });
+
+        Object.keys(animals).forEach(key => {
+          const animalType = Number(key) as Animal;
+          if (currentTile.animal === animalType) {
+            score += animals[animalType];
+          }
+        });
+
+        if (score !== 0) {
+          contributions.set(currentTile, score);
+        }
+      }
+    }
+
+    return contributions;
   }
 
   /**

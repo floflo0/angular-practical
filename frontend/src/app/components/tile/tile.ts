@@ -70,4 +70,46 @@ export class Tile {
     if (animal !== null) return ANIMAL_ALT_MESSAGES[animal];
     return TILE_TYPE_ALT_MESSAGES[type];
   });
+
+  protected onMouseEnter(): void {
+    this.gameService.setHoveredTile(this.tile());
+  }
+
+  protected onMouseLeave(): void {
+    if (this.gameService.hoveredTile() === this.tile()) {
+      this.gameService.setHoveredTile(null);
+    }
+  }
+
+  protected potentialScore = computed(() => {
+    const hoveredTile = this.gameService.hoveredTile();
+    const selectedAnimal = this.gameService.selectedAnimal();
+
+    if (!hoveredTile || selectedAnimal === null || !this.gameService.canPlaceSelectedAnimal(hoveredTile)) {
+      return null;
+    }
+
+    const contributions = this.gameService.getScoreContributions(hoveredTile, selectedAnimal);
+
+    return contributions.get(this.tile()) ?? null;
+  });
+
+  protected canShowPreview = computed(() => {
+    const hoveredTile = this.gameService.hoveredTile();
+    return hoveredTile === this.tile() &&
+      this.gameService.selectedAnimal() !== null &&
+      this.gameService.canPlaceSelectedAnimal(this.tile());
+  });
+
+  protected previewSvgPath = computed(() => {
+    const selectedAnimal = this.gameService.selectedAnimal();
+    if (selectedAnimal === null) return '';
+    return ANIMAL_SVG_PATHS[selectedAnimal];
+  });
+
+  protected scoreText = computed(() => {
+    const score = this.potentialScore();
+    if (score === null) return '';
+    return score > 0 ? `+${score}` : `${score}`;
+  });
 }
