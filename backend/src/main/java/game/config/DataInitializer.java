@@ -35,16 +35,16 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void createInitialMaps(){
-        String nom1 = "Map-Plain";
+        String nom1 = "Map-Chill";
         List<Integer> tiles1 = Arrays.asList(
-                0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0
+                2, 2, 2, 0, 0, 0, 1, 1,
+                2, 2, 2, 2, 2, 0, 1, 1,
+                1, 1, 2, 2, 2, 2, 2, 1,
+                1, 1, 0, 2, 2, 2, 2, 2,
+                1, 0, 0, 0, 0, 0, 2, 2,
+                0, 0, 1, 1, 0, 0, 0, 0,
+                0, 1, 1, 1, 1, 1, 0, 0,
+                1, 1, 1, 1, 1, 1, 1, 0
         );
         MapDto dto1 = new MapDto(null, nom1, tiles1);
         service.saveMap(dto1);
@@ -63,16 +63,16 @@ public class DataInitializer implements CommandLineRunner {
         MapDto dto2 = new MapDto(null, nom2, tiles2);
         service.saveMap(dto2);
 
-        String nom3 = "Map-Water";
+        String nom3 = "Map-Grid";
         List<Integer> tiles3 = Arrays.asList(
-                2, 2, 2, 2, 2, 2, 2, 2,
-                2, 2, 2, 2, 2, 2, 2, 2,
-                2, 2, 2, 2, 2, 2, 2, 2,
-                2, 2, 2, 2, 2, 2, 2, 2,
-                2, 2, 2, 2, 2, 2, 2, 2,
-                2, 2, 2, 2, 2, 2, 2, 2,
-                2, 2, 2, 2, 2, 2, 2, 2,
-                2, 2, 2, 2, 2, 2, 2, 2
+                2, 0, 2, 0, 2, 0, 2, 0,
+                0, 1, 0, 1, 0, 1, 0, 1,
+                2, 0, 2, 0, 2, 0, 2, 0,
+                0, 1, 0, 1, 0, 1, 0, 1,
+                2, 0, 2, 0, 2, 0, 2, 0,
+                0, 1, 0, 1, 0, 1, 0, 1,
+                2, 0, 2, 0, 2, 0, 2, 0,
+                0, 1, 0, 1, 0, 1, 0, 1
         );
         MapDto dto3 = new MapDto(null, nom3, tiles3);
         service.saveMap(dto3);
