@@ -1,16 +1,17 @@
-# Web 2 Project
+# Angular practical project
 
-Floris Bartra
-
-Clément Lainé
-
-Group 2.1
+This project was made as part of a Angular practical. The objective was to
+create a small game using Angular. This project was developed throughout the
+semester using a sprint-based approach. In parallel, we implemented a small Java
+backend and integrated it with the frontend.
 
 ## UML
 
 The UML diagram of the application's data model:
 
-![UML](./game-doc/uml.svg)
+![UML](./game-doc/uml_diagrams/uml_frontend.svg)
+
+![UML](./game-doc/uml_diagrams/uml_backend.svg)
 
 ## License
 
